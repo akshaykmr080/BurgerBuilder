@@ -30,10 +30,15 @@ class BurgerBuilder extends Component {
         this.setState({purchasing: true});
     }
 
-    backdropClicked = () => {
-        console.log('closing')
+    purchaseCancelHandler = () => {
+        //console.log('closing')
         this.setState({purchasing: false});
     }
+
+    purchaseContinueHandler = () => {
+        alert("continue purchase");
+    }
+
     updatePurchaseState = (ingredients) => {
         
         const sum = Object.keys(ingredients)
@@ -90,8 +95,12 @@ class BurgerBuilder extends Component {
         }
         return (
             <Aux>
-                <Modal show={this.state.purchasing} backdropClicked={this.backdropClicked}>
-                    <OrderSummary ingredients={this.state.ingredients}/>
+                <Modal show={this.state.purchasing} backdropClicked={this.purchaseCancelHandler}>
+                    <OrderSummary 
+                    purchaseCancled = {this.purchaseCancelHandler}
+                    purchaseContinue= {this.purchaseContinueHandler}
+                    ingredients={this.state.ingredients}
+                    price={this.state.totalPrice}/>
                 </Modal>
                 <Burger ingredients={this.state.ingredients}/>
                 <BuildControls 
