@@ -2,39 +2,29 @@ import React , { Component } from 'react';
 import Order from '../../components/Order/Order';
 import axios from '../../axios-orders';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+import * as actions from '../../store/actions/order';
+import { connect } from 'react-redux';
+import Spinner from '../../components/UI/Spinner/Spinner';
+
 
 class Orders extends Component {
-    state = {
-        orders : [],
-        loading : true
-    }
-    componentDidMount () {
+    
+    componentWillMount () {
+       this.props.onFetchOrders()
        
-        axios.get('/order.json')
-        .then(res => {
-            console.log(res.data)
-            const fetchOrders = [];
-            for(let key in res.data){
-                fetchOrders.push({
-                    ...res.data[key],
-                    id: key
-                })
-            }
-            this.setState({loading: false, orders: fetchOrders});
-        })
-        .catch(res => {
-            this.setState({loading: false})
-        })
     }
 
     render (){
-        console.log(this.state.orders)
-        let orders = this.state.orders.map(order => {
+        let orders = <Spinner />
+        if(!this.props.loading){
+            orders = this.props.order.map(order => {
             return <Order
                     key={order.id}
                     ingredients={order.ingredients}
                     totalPrice={+order.totalPrice}/>
         })
+        }
+        
         return  (
             <div>
                 {orders}
@@ -43,4 +33,16 @@ class Orders extends Component {
     }
 }
 
-export  default withErrorHandler (Orders, axios)
+const mapStateToProps = (state) => {
+    return {
+        order: state.orders.orders,
+        loading: state.orders.loading
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onFetchOrders: () => dispatch(actions.fetchOrders())
+    }
+}
+export  default connect(mapStateToProps,mapDispatchToProps)(withErrorHandler (Orders, axios))
