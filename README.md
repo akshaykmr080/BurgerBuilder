@@ -1,7 +1,7 @@
 - Build and order your own burgers using React framework & firebase.
 - State management between components using redux.
 - Asynchronous state management using action creators and Redux
-- Style react components using CSS3.
+- Style react components using CSS3 & CSS modules
 - Manage routes using React-Router and React-router-dom.
 - Load components lazily on the go.
 
